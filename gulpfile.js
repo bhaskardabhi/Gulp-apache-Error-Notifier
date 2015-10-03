@@ -20,6 +20,8 @@ gulp.task('watch', function() {
 		    	for (var i = 0; i < errorLines.length; i++) {
 		    		if(errorLines[i].indexOf("PHP Fatal error:") > -1){
 		    			errorTempLines.push(errorLines[i]);
+		    		} else if(errorLines[i].indexOf("PHP Parse error:") > -1) {
+		    			errorTempLines.push(errorLines[i]);
 		    		}
 		    	};
 
@@ -27,9 +29,15 @@ gulp.task('watch', function() {
 		    		displayLines = errorTempLines;
 		    	} else {
 			    	for (var i = 0; i < lastDisplayLines; i++) {
-			    		var error = errorTempLines[errorTempLines.length - lastDisplayLines - i],
-			    			errorArray = error.split("PHP Fatal error:"),
-			    			errorTime = myRegx.exec(errorArray[0])[1],
+			    		var error = errorTempLines[errorTempLines.length - lastDisplayLines - i];
+
+			    		if(error.indexOf("PHP Fatal error:") > -1){
+			    			errorArray = error.split("PHP Fatal error:");
+			    		} else if(error.indexOf("PHP Parse error:") > -1) {
+			    			errorArray = error.split("PHP Parse error:");
+			    		}
+
+			    		var errorTime = myRegx.exec(errorArray[0])[1],
 			    			errorMsg = errorArray[1];
 
 			    		if(lastErrorTime != errorTime){
